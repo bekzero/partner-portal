@@ -2,11 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
 
-interface Params {
-  params: Promise<{ id: string }>;
-}
+type RouteParams = Promise<{ id: string }>;
 
-export async function GET(req: NextRequest, { params }: Params) {
+export async function GET(req: NextRequest, { params }: { params: RouteParams }) {
   const session = await getSession();
 
   if (!session?.user) {
@@ -34,7 +32,7 @@ export async function GET(req: NextRequest, { params }: Params) {
   }
 }
 
-export async function PUT(req: NextRequest, { params }: Params) {
+export async function PUT(req: NextRequest, { params }: { params: RouteParams }) {
   const session = await getSession();
 
   if (session?.user?.role !== "admin") {
@@ -65,7 +63,7 @@ export async function PUT(req: NextRequest, { params }: Params) {
   }
 }
 
-export async function DELETE(req: NextRequest, { params }: Params) {
+export async function DELETE(req: NextRequest, { params }: { params: RouteParams }) {
   const session = await getSession();
 
   if (session?.user?.role !== "admin") {

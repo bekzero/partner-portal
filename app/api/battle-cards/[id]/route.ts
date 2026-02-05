@@ -3,12 +3,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
 
-interface Params {
-  params: Promise<{ id: string }>;
-}
+type RouteParams = Promise<{ id: string }>;
 
 // PUT /api/battle-cards/[id] - Update battle card
-export async function PUT(req: NextRequest, { params }: Params) {
+export async function PUT(req: NextRequest, { params }: { params: RouteParams }) {
   const session = await getSession();
   
   if (session?.user?.role !== "admin") {
@@ -64,7 +62,7 @@ export async function PUT(req: NextRequest, { params }: Params) {
 }
 
 // DELETE /api/battle-cards/[id] - Delete battle card
-export async function DELETE(req: NextRequest, { params }: Params) {
+export async function DELETE(req: NextRequest, { params }: { params: RouteParams }) {
   const session = await getSession();
   
   if (session?.user?.role !== "admin") {

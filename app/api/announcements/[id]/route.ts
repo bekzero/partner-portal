@@ -1,11 +1,11 @@
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import prisma from "@/lib/prisma";
+import { authOptions } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
-type Params = Promise<{ id: string }>;
+type RouteParams = Promise<{ id: string }>;
 
-export async function GET(req: NextRequest, { params }: Params) {
+export async function GET(req: NextRequest, { params }: { params: RouteParams }) {
   const session = await getServerSession(authOptions);
 
   if (!session?.user) {
@@ -34,7 +34,7 @@ export async function GET(req: NextRequest, { params }: Params) {
   }
 }
 
-export async function PUT(req: NextRequest, { params }: Params) {
+export async function PUT(req: NextRequest, { params }: { params: RouteParams }) {
   const session = await getServerSession(authOptions);
 
   if (!session?.user) {
@@ -66,7 +66,7 @@ export async function PUT(req: NextRequest, { params }: Params) {
   }
 }
 
-export async function DELETE(req: NextRequest, { params }: Params) {
+export async function DELETE(req: NextRequest, { params }: { params: RouteParams }) {
   const session = await getServerSession(authOptions);
 
   if (!session?.user) {
