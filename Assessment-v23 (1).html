@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authentication Posture Assessment</title>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root { --primary-color: #0f172a; --accent-color: #3b82f6; --bg-color: #f8fafc; --card-bg: #ffffff; --text-main: #1e293b; --radius: 8px; }
+        
+        /* PAGE BACKGROUND - BLACK */
+        body { 
+            font-family: 'Instrument Sans', sans-serif;
+            background-color: #000000; 
+            color: var(--text-main); 
+            margin: 0; 
+            padding: 20px; 
+            line-height: 1.6; 
+        }
+        
+        /* KZERO PLATFORM HEADER */
+        .platform-header {
+            text-align: center;
+            padding-bottom: 20px;
+            padding-top: 10px;
+        }
+        .platform-header img {
+            height: 50px; 
+            max-width: 100%;
+            object-fit: contain;
+        }
+
+        /* APP CONTAINER */
+        .container { 
+            max-width: 850px; 
+            margin: 0 auto; 
+            position: relative; 
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 50px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        
+        /* HEADER STYLES */
+        header { text-align: center; margin-bottom: 40px; position: relative; }
+        
+        /* CO-BRANDING HEADER STYLES */
+        .logo-container { 
+            height: 80px; margin-bottom: 15px; 
+            display: flex; justify-content: center; align-items: center; gap: 20px;
+        }
+        .logo-img { max-height: 100%; max-width: 200px; object-fit: contain; }
+        .logo-divider { width: 2px; height: 50px; background-color: #cbd5e1; display: none; }
+
+        h1 { margin: 0; font-size: 2rem; font-weight: 700; color: var(--primary-color); letter-spacing: -0.5px; }
+        .subtitle { color: #64748b; font-size: 1.1rem; font-weight: 500; }
+        
+        /* Info Card */
+        .info-card { background: #f8fafc; padding: 30px; border-radius: var(--radius); border: 1px solid #e2e8f0; margin-bottom: 30px; display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
+        .input-group label { display: block; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; color: #64748b; margin-bottom: 8px; letter-spacing: 0.5px; }
+        
+        input[type="text"], input[type="date"] { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: var(--radius); font-size: 1rem; box-sizing: border-box; font-family: 'Instrument Sans', sans-serif; }
+        
+        /* Branding Section */
+        .branding-section { grid-column: 1 / -1; background: #ffffff; padding: 20px; border-radius: var(--radius); border: 1px dashed #cbd5e1; display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-end; }
+        .branding-item { flex: 1; min-width: 140px; }
+        .branding-item label { font-size: 0.75rem; color: #64748b; font-weight: 700; margin-bottom: 5px; display: block; letter-spacing: 0.5px; }
+        input[type="color"] { border: none; width: 50px; height: 40px; cursor: pointer; background: none; }
+        input[type="file"] { font-size: 0.85rem; width: 100%; color: #475569; font-family: 'Instrument Sans', sans-serif; }
+
+        /* Questions */
+        .question-card { background: var(--card-bg); padding: 30px; border-radius: var(--radius); border: 1px solid #e2e8f0; margin-bottom: 25px; transition: transform 0.2s; }
+        .question-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #f1f5f9; padding-bottom: 15px; }
+        .q-title { font-size: 1.25rem; font-weight: 700; color: var(--primary-color); letter-spacing: -0.3px; }
+        .points-badge { background: #f1f5f9; color: var(--primary-color); font-size: 0.75rem; font-weight: 700; padding: 6px 12px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; }
+        
+        .options label { display: flex; align-items: flex-start; padding: 15px; margin-bottom: 10px; border: 2px solid #f1f5f9; border-radius: var(--radius); cursor: pointer; transition: all 0.2s; font-weight: 500; }
+        .options label:hover { background: #f8fafc; border-color: #cbd5e1; }
+        .options input[type="radio"] { margin-right: 15px; margin-top: 5px; }
+        .options label:has(input:checked) { border-color: var(--accent-color); background: #eff6ff; }
+        
+        /* Buttons */
+        .btn { background: var(--primary-color); color: white; border: none; padding: 18px 40px; font-size: 1.1rem; border-radius: var(--radius); cursor: pointer; width: 100%; font-weight: 700; margin-top: 20px; font-family: 'Instrument Sans', sans-serif; }
+        
+        .download-section { text-align: center; margin: 30px 0; }
+        .btn-print { 
+            background: white; color: var(--primary-color); 
+            border: 2px solid var(--primary-color); 
+            padding: 15px 30px; font-size: 1.1rem; 
+            border-radius: var(--radius); cursor: pointer; 
+            font-weight: 700; font-family: 'Instrument Sans', sans-serif;
+            width: 100%;
+            transition: all 0.2s;
+        }
+        .btn-print:hover { background: #f1f5f9; transform: translateY(-2px); box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+
+        /* Email Section Styles */
+        .email-section {
+            background: #f8fafc;
+            padding: 25px;
+            border-radius: var(--radius);
+            border: 1px solid #e2e8f0;
+            margin-top: 40px;
+        }
+        .email-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .email-header h3 { margin: 0; font-size: 1.1rem; color: var(--primary-color); }
+        
+        textarea#emailEditor {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #cbd5e1;
+            border-radius: var(--radius);
+            font-family: 'Instrument Sans', sans-serif;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            resize: vertical;
+            box-sizing: border-box;
+            margin-bottom: 15px;
+            color: #334155;
+        }
+        
+        .btn-copy { 
+            background: #0d9488; color: white; 
+            border: none; padding: 12px 25px; 
+            font-size: 1rem; border-radius: var(--radius); 
+            cursor: pointer; font-weight: 700; 
+            font-family: 'Instrument Sans', sans-serif;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .btn-copy:hover { background: #115e59; }
+
+        /* Dashboard */
+        #resultSection { display: none; animation: slideUp 0.6s ease-out; }
+        .dashboard-header { background: linear-gradient(135deg, var(--primary-color), var(--accent-color)); color: white; padding: 40px; border-radius: var(--radius); text-align: center; margin-bottom: 30px; }
+        .big-score { font-size: 3.5rem; font-weight: 700; line-height: 1; letter-spacing: -1px; }
+        .posture-status { font-size: 1.8rem; font-weight: 700; margin-top: 10px; letter-spacing: -0.5px; }
+        .risk-text { font-size: 1.1rem; opacity: 0.95; font-weight: 500; }
+
+        .grid-results { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+        .result-card { background: white; padding: 25px; border-radius: var(--radius); border: 1px solid #e2e8f0; }
+        .result-card h3 { font-weight: 700; letter-spacing: -0.3px; }
+        #recList li { background: #fff1f2; color: #9f1239; padding: 12px; margin-bottom: 10px; border-radius: 6px; border-left: 4px solid #e11d48; font-weight: 500; }
+        #recList li.good { background: #f0fdf4; color: #166534; border-left-color: #16a34a; }
+
+        @keyframes slideUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+    <div class="platform-header">
+        <img src="https://kzero.com/wp-content/uploads/2025/11/kzero-logo-kzero-passwordless-horizontal-01-white-logo-kzero-passwordless-horizontal-01-white.png" alt="KZero Passwordless">
+    </div>
+
+<div class="container" id="captureArea">
+
+    <header>
+        <div class="logo-container" id="headerLogos">
+            <img id="mspLogoImg" class="logo-img" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgNTAiPjxyZWN0IHdpZHRoPSI1MCIgaGVpZ2h0PSI1MCIgcng9IjgiIGZpbGw9IiMwRjE3MkEiLz48cGF0aCBkPSJNMjUgMTBMMzUgMzBIMTVMMjUgMTBaIiBmaWxsPSJ3aGl0ZSIvPjx0ZXh0IHg9IjYwIiB5PSIzMiIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXdlaWdodD0iYm9sZCIgZm9udC1zaXplPSIyNCIgZmlsbD0iIzBGMTcyQSI+TVNQPHRzcGFuIGZpbGw9IiMzQjgyRjYiPlNlY3VyZTwvdHNwYW4+PC90ZXh0Pjwvc3ZnPg==" alt="MSP Logo" crossorigin="anonymous">
+            
+            <div id="headerDivider" class="logo-divider"></div>
+
+            <img id="clientLogoImg" class="logo-img" style="display:none;" src="" alt="Client Logo" crossorigin="anonymous">
+        </div>
+
+        <h1 id="appTitle">Authentication Scorecard</h1>
+        <div class="subtitle">Client Readiness Assessment</div>
+    </header>
+
+    <div class="info-card">
+        <div class="input-group">
+            <label>Managed Service Provider</label>
+            <input type="text" id="mspName" placeholder="e.g. MSP ABC Inc.">
+        </div>
+        <div class="input-group">
+            <label>Client Organization</label>
+            <input type="text" id="clientName" placeholder="e.g. Acme Corp">
+        </div>
+
+        <div class="input-group">
+            <label>Assessment Date</label>
+            <input type="date" id="reportDate">
+        </div>
+        <div class="input-group">
+            <label>Client Contact Name</label>
+            <input type="text" id="clientContact" placeholder="e.g. Jane Smith">
+        </div>
+
+        <div class="branding-section">
+            <div class="branding-item" style="flex: 1.5;">
+                <label>MSP LOGO (PDF)</label>
+                <input type="file" id="mspLogoInput" accept="image/*" onchange="handleLogoUpload(this, 'msp')">
+            </div>
+            <div class="branding-item" style="flex: 1.5;">
+                <label>CLIENT LOGO (PDF)</label>
+                <input type="file" id="clientLogoInput" accept="image/*" onchange="handleLogoUpload(this, 'client')">
+            </div>
+            <div class="branding-item">
+                <label>PRIMARY COLOR</label>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <input type="color" id="primaryColorPicker" value="#0f172a" oninput="updateBrandColor('primary', this.value)">
+                </div>
+            </div>
+            <div class="branding-item">
+                <label>ACCENT COLOR</label>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <input type="color" id="accentColorPicker" value="#3b82f6" oninput="updateBrandColor('accent', this.value)">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <form id="assessmentForm">
+        <div class="question-card">
+            <div class="question-header"><div class="q-title">1. MFA Coverage</div><div class="points-badge">30 PTS</div></div>
+            <div class="options">
+                <label><input type="radio" name="mfa" value="30" required> Universal (Biometric/App-based enforced everywhere)</label>
+                <label><input type="radio" name="mfa" value="20"> Inconsistent (Enabled on critical apps, but not all)</label>
+                <label><input type="radio" name="mfa" value="10"> Minimal (Admin accounts only or SMS-based)</label>
+                <label><input type="radio" name="mfa" value="0"> None (No meaningful MFA adoption)</label>
+            </div>
+        </div>
+        <div class="question-card">
+            <div class="question-header"><div class="q-title">2. SSO Adoption</div><div class="points-badge">20 PTS</div></div>
+            <div class="options">
+                <label><input type="radio" name="sso" value="20" required> Centralized (≥80% of apps covered)</label>
+                <label><input type="radio" name="sso" value="10"> Partial (Major platforms like M365 only)</label>
+                <label><input type="radio" name="sso" value="0"> None / App Sprawl (Multiple credentials per user)</label>
+            </div>
+        </div>
+        <div class="question-card">
+            <div class="question-header"><div class="q-title">3. Password Management</div><div class="points-badge">20 PTS</div></div>
+            <div class="options">
+                <label><input type="radio" name="pwd" value="20" required> Full Passwordless OR Enforced Password Manager</label>
+                <label><input type="radio" name="pwd" value="10"> Optional Password Manager / Basic Policies</label>
+                <label><input type="radio" name="pwd" value="0"> Manual / Unmanaged (Shared/Weak credentials)</label>
+            </div>
+        </div>
+        <div class="question-card">
+            <div class="question-header"><div class="q-title">4. Privileged Access</div><div class="points-badge">15 PTS</div></div>
+            <div class="options">
+                <label><input type="radio" name="pac" value="15" required> RBAC & MFA Enforced on Admins</label>
+                <label><input type="radio" name="pac" value="5"> Separate Admin Accounts (No strong enforcement)</label>
+                <label><input type="radio" name="pac" value="0"> Shared Admin Passwords / No dedicated accounts</label>
+            </div>
+        </div>
+        <div class="question-card">
+            <div class="question-header"><div class="q-title">5. User Experience</div><div class="points-badge">15 PTS</div></div>
+            <div class="options">
+                <label><input type="radio" name="ux" value="15" required> Seamless Login (Biometrics/Device Trust)</label>
+                <label><input type="radio" name="ux" value="5"> Manageable Friction (Occasional lockouts)</label>
+                <label><input type="radio" name="ux" value="0"> High Friction (Frequent resets, shadow IT)</label>
+            </div>
+        </div>
+        <button type="button" class="btn" onclick="calculateScore()">Analyze & Generate Report</button>
+    </form>
+
+    <div id="resultSection">
+        
+        <div class="dashboard-header" id="dashboardHeader">
+            <div class="big-score" id="displayScore">--</div>
+            <div class="posture-status" id="displayPosture">Calculating...</div>
+            <div class="risk-text" id="riskStatement">Assessment Pending</div>
+        </div>
+
+        <div class="download-section">
+            <button class="btn-print" id="downloadBtn" onclick="generatePerfectPDF()">📄 Download Whitelabeled PDF Report</button>
+        </div>
+
+        <div class="grid-results">
+            <div class="result-card">
+                <h3>Postural Breakdown</h3>
+                <div style="position: relative; height: 300px; width: 100%;"><canvas id="scoreChart"></canvas></div>
+            </div>
+            <div class="result-card">
+                <h3>Strategic Recommendations</h3>
+                <ul id="recList"></ul>
+            </div>
+        </div>
+        
+        <div class="email-section">
+            <div class="email-header">
+                <h3>✉️ Client Email Draft</h3>
+                <button class="btn-copy" onclick="copyFromEditor()">📋 Copy to Clipboard</button>
+            </div>
+            <textarea id="emailEditor" rows="12"></textarea>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    // --- GLOBAL STATE ---
+    let currentRecs = []; 
+    let currentAnswers = [];
+    let currentTotal = 0;
+    let currentPosture = "";
+    let currentRisk = "";
+
+    // --- 1. PDF GENERATION ENGINE ---
+    async function generatePerfectPDF() {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        
+        // Colors
+        const primaryHex = getComputedStyle(document.documentElement).getPropertyValue('--primary-color').trim();
+        const [pR, pG, pB] = hexToRgb(primaryHex);
+
+        // Risk Color
+        let riskR, riskG, riskB;
+        if (currentTotal >= 80) { riskR=22; riskG=163; riskB=74; } // Green
+        else if (currentTotal >= 50) { riskR=217; riskG=119; riskB=6; } // Orange
+        else { riskR=220; riskG=38; riskB=38; } // Red
+        
+        // A. Header Background - SHRUNK to 25mm
+        doc.setFillColor(pR, pG, pB);
+        doc.rect(0, 0, 210, 25, 'F'); 
+
+        // B. Title & Date
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(20);
+        doc.setFont("helvetica", "bold");
+        doc.text("Authentication Posture Report", 105, 12, { align: "center" });
+        
+        const dateInput = document.getElementById('reportDate').value; 
+        let displayDate;
+        if (dateInput) {
+            const parts = dateInput.split('-'); 
+            if(parts.length === 3) { displayDate = `${parts[1]}/${parts[2]}/${parts[0]}`; } 
+            else { displayDate = new Date().toLocaleDateString(); }
+        } else { displayDate = new Date().toLocaleDateString(); }
+
+        doc.setFontSize(10);
+        doc.setFont("helvetica", "normal");
+        doc.text(`Generated: ${displayDate}`, 105, 20, { align: "center" });
+
+        // C. Client Info
+        doc.setTextColor(50, 50, 50);
+        doc.setFontSize(11);
+        const client = document.getElementById('clientName').value || "Client Organization";
+        const msp = document.getElementById('mspName').value || "Managed Service Provider";
+        
+        doc.text(`Client: ${client}`, 15, 35);
+        doc.text(`MSP: ${msp}`, 195, 35, { align: "right" }); 
+        
+        doc.setDrawColor(200, 200, 200);
+        doc.line(15, 40, 195, 40);
+
+        // D. LOGOS
+        let mspWidth = 0;
+        try {
+            const mspImg = await convertImgToPng(document.getElementById('mspLogoImg'));
+            if(mspImg) {
+                mspWidth = (mspImg.width / mspImg.height) * 12; 
+                if(mspWidth > 50) mspWidth = 50; 
+                doc.addImage(mspImg.data, 'PNG', 15, 45, mspWidth, 12);
+            }
+        } catch(e) {}
+
+        const clientLogoEl = document.getElementById('clientLogoImg');
+        if (clientLogoEl.src) {
+             try {
+                const clientImg = await convertImgToPng(clientLogoEl);
+                if(clientImg) {
+                    const startX = 15 + mspWidth + 5; 
+                    doc.setDrawColor(200, 200, 200);
+                    doc.setLineWidth(0.5);
+                    doc.line(startX, 45, startX, 57); 
+                    
+                    let clientWidth = (clientImg.width / clientImg.height) * 12;
+                    if(clientWidth > 50) clientWidth = 50;
+                    doc.addImage(clientImg.data, 'PNG', startX + 5, 45, clientWidth, 12);
+                }
+             } catch(e) {}
+        }
+
+        // E. SCORE SECTION
+        doc.setFontSize(14);
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(50, 50, 50);
+        doc.text("Assessment Results", 15, 65); 
+
+        // Draw Score Box
+        doc.setDrawColor(riskR, riskG, riskB);
+        doc.setLineWidth(1.5);
+        doc.roundedRect(15, 70, 180, 35, 3, 3);
+        
+        // Score & Posture
+        doc.setFontSize(28);
+        doc.setTextColor(riskR, riskG, riskB);
+        doc.text(`${currentTotal}/100`, 25, 93);
+        
+        doc.setFontSize(14);
+        doc.text(currentPosture, 85, 82);
+        
+        doc.setFontSize(10);
+        doc.setTextColor(60, 60, 60);
+        const splitRisk = doc.splitTextToSize(currentRisk, 100);
+        doc.text(splitRisk, 85, 92);
+
+        // F. VISUALS (JPEG 0.75)
+        const chartCanvas = document.getElementById('scoreChart');
+        const chartImg = chartCanvas.toDataURL("image/jpeg", 0.75);
+        doc.addImage(chartImg, 'JPEG', 15, 115, 75, 75);
+
+        // Traffic Light Breakdown
+        doc.setFontSize(12);
+        doc.setTextColor(pR, pG, pB); 
+        doc.text("Detailed Analysis", 105, 118);
+        
+        let detailY = 128;
+        doc.setFontSize(9);
+        
+        currentAnswers.forEach(item => {
+            let cR=220, cG=38, cB=38; 
+            if(item.score >= item.max) { cR=22; cG=163; cB=74; } 
+            else if(item.score > 0) { cR=217; cG=119; cB=6; } 
+            
+            doc.setFillColor(cR, cG, cB);
+            doc.circle(108, detailY-1, 2, 'F');
+            
+            doc.setFont("helvetica", "bold");
+            doc.setTextColor(50, 50, 50);
+            doc.text(item.category, 113, detailY);
+            
+            doc.setFont("helvetica", "normal");
+            doc.setTextColor(100, 100, 100);
+            const cleanAns = item.answer.split('(')[0].trim(); 
+            const splitAns = doc.splitTextToSize(cleanAns, 80);
+            doc.text(splitAns, 113, detailY + 4);
+            
+            detailY += 12; 
+        });
+
+        // G. RECOMMENDATIONS
+        doc.setFontSize(14);
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(pR, pG, pB); 
+        doc.text("Strategic Recommendations", 15, 200);
+        
+        let recY = 210;
+        doc.setFontSize(9);
+        doc.setTextColor(0, 0, 0);
+        doc.setFont("helvetica", "normal");
+
+        currentRecs.forEach(recHTML => {
+            const tempDiv = document.createElement("div");
+            tempDiv.innerHTML = recHTML;
+            const cleanText = tempDiv.textContent || tempDiv.innerText;
+            
+            doc.setFillColor(pR, pG, pB);
+            doc.circle(18, recY - 1, 1, 'F');
+            
+            const splitText = doc.splitTextToSize(cleanText, 175);
+            doc.text(splitText, 22, recY);
+            recY += (splitText.length * 4) + 3; 
+        });
+
+        // H. FOOTER TEXT - RIGHT ALIGNED
+        doc.setFontSize(8);
+        doc.setTextColor(150, 150, 150);
+        const footerText = "Confidential Assessment - Generated by KZero Passwordless";
+        doc.text(footerText, 195, 285, { align: "right" });
+
+        doc.save(`${client}_Auth_Report.pdf`);
+    }
+
+    // --- 2. EMAIL GENERATION LOGIC (Auto-Fill Editor) ---
+    function updateEmailEditor() {
+        const client = document.getElementById('clientName').value || "Client";
+        const contact = document.getElementById('clientContact').value;
+        const msp = document.getElementById('mspName').value || "MSP";
+        const salutation = contact ? `Hi ${contact},` : `Hi ${client} Team,`;
+        
+        const topRec = currentRecs.length > 0 ? currentRecs[0].replace(/<[^>]*>?/gm, '') : "Review security policies.";
+        
+        const emailBody = `Subject: Authentication Assessment Results - ${client}
+
+${salutation}
+
+Thank you for reviewing your authentication posture with us today. Here is the executive summary of our assessment:
+
+SCORE: ${currentTotal}/100
+STATUS: ${currentPosture}
+RISK LEVEL: ${currentRisk.split('.')[0]}
+
+KEY FINDINGS:
+${currentAnswers.map(a => `- ${a.category}: ${a.answer.split('(')[0].trim()}`).join('\n')}
+
+TOP PRIORITY ACTION:
+${topRec}
+
+We have attached the detailed PDF report for your records. Please let us know when you would like to discuss the remediation plan.
+
+Best regards,
+
+${msp}`;
+
+        document.getElementById('emailEditor').value = emailBody;
+    }
+
+    function copyFromEditor() {
+        const text = document.getElementById('emailEditor').value;
+        navigator.clipboard.writeText(text).then(() => {
+            alert("Email summary copied to clipboard!");
+        });
+    }
+
+    // --- HELPERS & CORE LOGIC ---
+    function convertImgToPng(imgEl) {
+        return new Promise((resolve) => {
+            if(!imgEl.src || imgEl.src === window.location.href) resolve(null);
+            
+            let w = imgEl.naturalWidth || 200;
+            let h = imgEl.naturalHeight || 50;
+            const MAX_DIM = 800; 
+            if (w > MAX_DIM || h > MAX_DIM) {
+                const ratio = w / h;
+                if (w > h) { w = MAX_DIM; h = MAX_DIM / ratio; }
+                else { h = MAX_DIM; w = MAX_DIM * ratio; }
+            }
+
+            const c = document.createElement('canvas');
+            c.width = w;
+            c.height = h;
+            const ctx = c.getContext('2d');
+            const imgObj = new Image();
+            imgObj.crossOrigin = "Anonymous";
+            imgObj.onload = () => {
+                ctx.drawImage(imgObj, 0, 0, w, h);
+                resolve({ data: c.toDataURL('image/png'), width: w, height: h });
+            };
+            imgObj.onerror = () => resolve(null);
+            imgObj.src = imgEl.src;
+        });
+    }
+
+    function hexToRgb(hex) {
+        let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        return result ? [parseInt(result[1], 16), parseInt(result[2], 16), parseInt(result[3], 16)] : [0,0,0];
+    }
+
+    window.onload = function() {
+        document.getElementById('reportDate').valueAsDate = new Date();
+        if(localStorage.getItem('authScore_primary')) updateBrandColor('primary', localStorage.getItem('authScore_primary'));
+        if(localStorage.getItem('authScore_accent')) updateBrandColor('accent', localStorage.getItem('authScore_accent'));
+        if(localStorage.getItem('authScore_mspLogo')) document.getElementById('mspLogoImg').src = localStorage.getItem('authScore_mspLogo');
+        
+        if(localStorage.getItem('authScore_primary')) document.getElementById('primaryColorPicker').value = localStorage.getItem('authScore_primary');
+        if(localStorage.getItem('authScore_accent')) document.getElementById('accentColorPicker').value = localStorage.getItem('authScore_accent');
+    };
+
+    function updateBrandColor(type, color) {
+        if(type === 'primary') {
+            document.documentElement.style.setProperty('--primary-color', color);
+            localStorage.setItem('authScore_primary', color);
+        } else {
+            document.documentElement.style.setProperty('--accent-color', color);
+            localStorage.setItem('authScore_accent', color);
+        }
+    }
+
+    function handleLogoUpload(input, type) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                if(type === 'msp') {
+                    document.getElementById('mspLogoImg').src = e.target.result;
+                    localStorage.setItem('authScore_mspLogo', e.target.result);
+                } else {
+                    const img = document.getElementById('clientLogoImg');
+                    img.src = e.target.result;
+                    img.style.display = 'block'; 
+                    document.getElementById('headerDivider').style.display = 'block'; 
+                }
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function calculateScore() {
+        const form = document.getElementById('assessmentForm');
+        if(!form.checkValidity()) { alert("Please complete all sections."); return; }
+
+        const inputs = [
+            { id: 'mfa', cat: 'MFA Coverage', max: 30 },
+            { id: 'sso', cat: 'SSO Adoption', max: 20 },
+            { id: 'pwd', cat: 'Password Mgmt', max: 20 },
+            { id: 'pac', cat: 'Privileged Access', max: 15 },
+            { id: 'ux', cat: 'User Experience', max: 15 }
+        ];
+
+        currentAnswers = [];
+        let total = 0;
+        const chartData = [];
+
+        inputs.forEach(item => {
+            const el = document.querySelector(`input[name="${item.id}"]:checked`);
+            const val = parseInt(el.value);
+            const label = el.parentElement.textContent.trim();
+            
+            total += val;
+            chartData.push(val);
+            currentAnswers.push({ category: item.cat, answer: label, score: val, max: item.max });
+        });
+
+        currentTotal = total;
+
+        let headerColorStart = "";
+        let headerColorEnd = "";
+        
+        if (currentTotal >= 80) {
+            currentPosture = "Modern Posture";
+            currentRisk = "Low Risk. Controls are effective against most identity attacks.";
+            headerColorStart = "#16a34a"; headerColorEnd = "#15803d";
+        } else if (currentTotal >= 50) {
+            currentPosture = "Transitional Posture";
+            currentRisk = "Moderate Risk. Action Required: Move to passwordless auth.";
+            headerColorStart = "#d97706"; headerColorEnd = "#b45309";
+        } else {
+            currentPosture = "Weak Posture";
+            currentRisk = "CRITICAL: High Risk of credential theft detected. Immediate remediation required.";
+            headerColorStart = "#dc2626"; headerColorEnd = "#991b1b";
+        }
+
+        currentRecs = [];
+        const mfaVal = currentAnswers[0].score;
+        const ssoVal = currentAnswers[1].score;
+        const pwdVal = currentAnswers[2].score;
+        const pacVal = currentAnswers[3].score;
+        const uxVal = currentAnswers[4].score;
+
+        if (mfaVal < 30) currentRecs.push("Implement Passwordless MFA: Move to FIDO2/Biometrics to eliminate phishing risks.");
+        if (ssoVal < 20) currentRecs.push("Consolidate Identity (SSO): Centralize apps to reduce attack surface.");
+        if (pwdVal < 20) currentRecs.push("Enforce Password Vaulting: Deploy a managed password manager for legacy apps.");
+        if (pacVal < 15) currentRecs.push("Secure Admin Access: Enforce RBAC and separate privileged accounts.");
+        if (uxVal < 15) currentRecs.push("Reduce Friction: Implement device trust to lower support tickets.");
+        if (currentRecs.length === 0) currentRecs.push("Excellent hygiene. Maintain current controls.");
+
+        document.getElementById('displayScore').innerText = currentTotal;
+        document.getElementById('displayPosture').innerText = currentPosture;
+        document.getElementById('riskStatement').innerText = currentRisk;
+        
+        const header = document.getElementById('dashboardHeader');
+        header.style.background = `linear-gradient(135deg, ${headerColorStart}, ${headerColorEnd})`;
+
+        const recList = document.getElementById('recList');
+        recList.innerHTML = "";
+        currentRecs.forEach(r => {
+            let li = document.createElement('li');
+            li.innerHTML = r;
+            recList.appendChild(li);
+        });
+
+        document.getElementById('resultSection').style.display = "block";
+        document.getElementById('assessmentForm').style.display = "none";
+        document.querySelector('.info-card').style.display = "none";
+        
+        // GENERATE EMAIL DRAFT IMMEDIATELY
+        updateEmailEditor();
+
+        window.scrollTo({top: 0, behavior: 'smooth'});
+
+        let brandColor = getComputedStyle(document.documentElement).getPropertyValue('--primary-color').trim();
+        renderChart(chartData, brandColor);
+    }
+
+    function renderChart(data, mainColor) {
+        let chartStatus = Chart.getChart("scoreChart"); 
+        if (chartStatus != undefined) { chartStatus.destroy(); }
+
+        const whiteBackgroundPlugin = {
+            id: 'customCanvasBackgroundColor',
+            beforeDraw: (chart) => {
+                const { ctx } = chart;
+                ctx.save();
+                ctx.globalCompositeOperation = 'destination-over';
+                ctx.fillStyle = 'white';
+                ctx.fillRect(0, 0, chart.width, chart.height);
+                ctx.restore();
+            }
+        };
+
+        const ctx = document.getElementById('scoreChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels: ['MFA', 'SSO', 'Passwords', 'Admin', 'UX'],
+                datasets: [{
+                    label: 'Score',
+                    data: data,
+                    backgroundColor: hexToRgbA(mainColor, 0.4),
+                    borderColor: mainColor,
+                    pointBackgroundColor: mainColor,
+                    borderWidth: 2
+                }, {
+                    label: 'Target',
+                    data: [30, 20, 20, 15, 15],
+                    borderColor: '#94a3b8',
+                    borderWidth: 1,
+                    borderDash: [5, 5],
+                    pointRadius: 0
+                }]
+            },
+            options: {
+                scales: {
+                    r: {
+                        beginAtZero: true,
+                        suggestedMax: 30,
+                        pointLabels: { font: { size: 12, weight: 'bold' } }
+                    }
+                }
+            },
+            plugins: [whiteBackgroundPlugin]
+        });
+    }
+
+    function hexToRgbA(hex, alpha){
+        var c;
+        if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)){
+            c= hex.substring(1).split('');
+            if(c.length== 3){ c= [c[0], c[0], c[1], c[1], c[2], c[2]]; }
+            c= '0x'+c.join('');
+            return 'rgba('+[(c>>16)&255, (c>>8)&255, c&255].join(',')+','+alpha+')';
+        }
+        return 'rgba(37, 99, 235, 0.4)'; 
+    }
+</script>
+</body>
+</html>

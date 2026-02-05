@@ -1,0 +1,101 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  partner
+  admin
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String?
+  passwordHash String
+  role         Role     @default(partner)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  battleCards    BattleCard[]
+  announcements  Announcement[]
+  resources      Resource[]
+}
+
+model BattleCard {
+  id              String   @id @default(cuid())
+  title           String
+  summary         String
+  competitor      String
+  industry        String
+  contentMarkdown String
+  published       Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  createdById String?
+  createdBy   User?    @relation(fields: [createdById], references: [id], onDelete: SetNull)
+
+  tags BattleCardTag[]
+
+  @@index([industry])
+  @@index([competitor])
+  @@index([published])
+}
+
+model Tag {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  createdAt DateTime @default(now())
+
+  battleCards BattleCardTag[]
+}
+
+model BattleCardTag {
+  battleCardId String
+  tagId        String
+
+  battleCard BattleCard @relation(fields: [battleCardId], references: [id], onDelete: Cascade)
+  tag        Tag        @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([battleCardId, tagId])
+  @@index([tagId])
+}
+
+model Announcement {
+  id              String   @id @default(cuid())
+  title           String
+  contentMarkdown String
+  published       Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  createdById String?
+  createdBy   User?    @relation(fields: [createdById], references: [id], onDelete: SetNull)
+
+  @@index([published])
+}
+
+model Resource {
+  id          String   @id @default(cuid())
+  title       String
+  url         String
+  category    String
+  description String?
+  published   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  createdById String?
+  createdBy   User?    @relation(fields: [createdById], references: [id], onDelete: SetNull)
+
+  @@index([category])
+  @@index([published])
+}
