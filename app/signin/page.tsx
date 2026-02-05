@@ -7,7 +7,7 @@ import Image from "next/image";
 
 export default async function SignInPage() {
   const session = await getSession();
-  if (session) redirect("/app");
+  if (session) redirect("/");
 
   return (
     <div className="min-h-dvh bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(255,140,50,0.1),transparent_50%),radial-gradient(1000px_circle_at_20%_10%,rgba(255,255,255,0.03),transparent_45%)] bg-zinc-950 text-zinc-100">
@@ -15,7 +15,7 @@ export default async function SignInPage() {
         <div className="grid w-full max-w-5xl grid-cols-1 overflow-hidden rounded-2xl border border-zinc-800/60 bg-zinc-950/80 shadow-2xl backdrop-blur-xl md:grid-cols-2">
           <div className="relative hidden border-r border-zinc-800/60 bg-gradient-to-br from-zinc-900/90 to-zinc-950/90 p-10 md:block">
             <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNCI+PGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iMiIvPjwvZz48L2c+PC9zdmc+')] opacity-50" />
-            
+
             <div className="relative z-10">
               <div className="mb-8">
                 <Image
@@ -95,9 +95,9 @@ export default async function SignInPage() {
                   Sign in to access your partner resources
                 </p>
               </div>
-              
+
               <SignInForm />
-              
+
               <div className="mt-6 flex items-center justify-between text-xs text-zinc-400">
                 <a href="https://www.kzero.com/contact/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
                   Need access?

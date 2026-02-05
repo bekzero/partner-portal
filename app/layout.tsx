@@ -1,16 +1,22 @@
 import type { Metadata } from "next";
+import { Inter } from "next/font/google"; // Standard font
+import "./globals.css";
 
-import { AppShell } from "@/components/app-shell";
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Partner Portal",
   description: "Partner enablement portal",
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return <>{children}</>;
+  return (
+    <html lang="en">
+      <body className={inter.className}>{children}</body>
+    </html>
+  );
 }
