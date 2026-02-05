@@ -72,7 +72,7 @@ export default async function AdminContentPage() {
                 </CardDescription>
               </div>
               <Button asChild className="bg-kzOrange text-zinc-950 hover:bg-kzOrange/90">
-                <Link href="/app/battle-cards/new">
+                <Link href="/battle-cards/new">
                   <Plus className="mr-2 h-4 w-4" />
                   Create New
                 </Link>

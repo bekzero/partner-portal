@@ -8,9 +8,9 @@ export default withAuth(
       | "partner"
       | undefined;
 
-    if (pathname.startsWith("/app/admin") && role !== "admin") {
+    if (pathname.startsWith("/admin") && role !== "admin") {
       const url = req.nextUrl.clone();
-      url.pathname = "/app";
+      url.pathname = "/";
       return Response.redirect(url);
     }
   },
@@ -25,5 +25,5 @@ export default withAuth(
 );
 
 export const config = {
-  matcher: ["/app/:path*"],
+  matcher: ["/:path*"],
 };

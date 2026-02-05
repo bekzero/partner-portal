@@ -44,7 +44,7 @@ export default async function BattleCardPage({ params }: BattleCardPageProps) {
           asChild
           className="text-zinc-400 hover:text-zinc-100"
         >
-          <Link href="/app/battle-cards">
+          <Link href="/battle-cards">
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Battle Cards
           </Link>

@@ -108,7 +108,7 @@ export default async function DashboardPage() {
               Client readiness assessment
             </p>
             <Button asChild className="mt-3 bg-kzOrange text-zinc-950 hover:bg-kzOrange/90 w-full">
-              <Link href="/app/security-assessment">
+              <Link href="/security-assessment">
                 Launch Tool <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
@@ -128,7 +128,7 @@ export default async function DashboardPage() {
               </CardDescription>
             </div>
             <Button variant="outline" size="sm" asChild className="border-zinc-700 bg-zinc-950 text-zinc-300 hover:bg-zinc-800 hover:text-zinc-100">
-              <Link href="/app/battle-cards">View all</Link>
+              <Link href="/battle-cards">View all</Link>
             </Button>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -183,7 +183,7 @@ export default async function DashboardPage() {
               </CardDescription>
             </div>
             <Button variant="outline" size="sm" asChild className="border-zinc-700 bg-zinc-950 text-zinc-300 hover:bg-zinc-800 hover:text-zinc-100">
-              <Link href="/app/announcements">View all</Link>
+              <Link href="/announcements">View all</Link>
             </Button>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -225,13 +225,13 @@ export default async function DashboardPage() {
           </CardHeader>
           <CardContent className="flex flex-wrap gap-3">
             <Button asChild className="bg-kzOrange text-zinc-950 hover:bg-kzOrange/90">
-              <Link href="/app/battle-cards/new">Create Battle Card</Link>
+              <Link href="/battle-cards/new">Create Battle Card</Link>
             </Button>
             <Button variant="outline" asChild className="border-zinc-700 bg-zinc-950 text-zinc-300 hover:bg-zinc-800 hover:text-zinc-100">
-              <Link href="/app/admin/users">Manage Users</Link>
+              <Link href="/admin/users">Manage Users</Link>
             </Button>
             <Button variant="outline" asChild className="border-zinc-700 bg-zinc-950 text-zinc-300 hover:bg-zinc-800 hover:text-zinc-100">
-              <Link href="/app/admin/content">Manage Content</Link>
+              <Link href="/admin/content">Manage Content</Link>
             </Button>
           </CardContent>
         </Card>

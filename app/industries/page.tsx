@@ -96,7 +96,7 @@ export default async function IndustriesPage({ searchParams }: IndustriesPagePro
               {selectedIndustry} Battle Cards
             </h2>
             <Link
-              href="/app/industries"
+              href="/industries"
               className="text-sm text-zinc-500 hover:text-zinc-300"
             >
               Clear filter
