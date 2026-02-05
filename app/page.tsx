@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { FileText, Megaphone, TrendingUp, Users, ShieldCheck, ArrowRight } from "lucide-react";
 
 import { prisma } from "@/lib/prisma";
@@ -7,10 +8,16 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { formatDistanceToNow } from "date-fns";
+import { AppShell } from "@/components/app-shell";
 
 export default async function DashboardPage() {
   const session = await getSession();
-  const isAdmin = session?.user?.role === "admin";
+  
+  if (!session?.user) {
+    redirect("/signin");
+  }
+
+  const isAdmin = session.user.role === "admin";
 
   // Fetch recent battle cards
   const recentBattleCards = await prisma.battleCard.findMany({
@@ -37,7 +44,8 @@ export default async function DashboardPage() {
   const resourceCount = await prisma.resource.count({ where: { published: true } });
 
   return (
-    <div className="space-y-6">
+    <AppShell user={session.user}>
+      <div className="space-y-6">
       {/* Header */}
       <div>
         <h1 className="text-2xl font-semibold tracking-tight text-zinc-100">
@@ -136,9 +144,9 @@ export default async function DashboardPage() {
               <p className="text-sm text-zinc-500">No battle cards yet.</p>
             ) : (
               recentBattleCards.map((card) => (
-                <Link
+                  <Link
                   key={card.id}
-                  href={`/app/battle-cards/${card.id}`}
+                  href={`/battle-cards/${card.id}`}
                   className="group block space-y-2 rounded-lg border border-zinc-800/60 bg-zinc-950/50 p-3 transition-all hover:border-zinc-700 hover:bg-zinc-800/30"
                 >
                   <div className="flex items-start justify-between">
@@ -193,7 +201,7 @@ export default async function DashboardPage() {
               recentAnnouncements.map((announcement) => (
                 <Link
                   key={announcement.id}
-                  href={`/app/announcements/${announcement.id}`}
+                  href={`/announcements/${announcement.id}`}
                   className="group block space-y-2 rounded-lg border border-zinc-800/60 bg-zinc-950/50 p-3 transition-all hover:border-zinc-700 hover:bg-zinc-800/30"
                 >
                   <div className="flex items-start justify-between">
@@ -237,5 +245,6 @@ export default async function DashboardPage() {
         </Card>
       )}
     </div>
+    </AppShell>
   );
 }
