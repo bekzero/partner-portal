@@ -165,7 +165,7 @@ export default async function DashboardPage() {
                     <Badge variant="secondary" className="bg-zinc-800/60 text-zinc-400 text-xs">
                       {card.industry}
                     </Badge>
-                    {card.tags.slice(0, 2).map(({ tag }) => (
+                    {card.tags.slice(0, 2).map(({ tag }: { tag: { id: string; name: string } }) => (
                       <Badge
                         key={tag.id}
                         variant="outline"
