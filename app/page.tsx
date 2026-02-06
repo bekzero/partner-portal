@@ -36,25 +36,25 @@ export default async function RootPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight text-zinc-100">
+        <h1 className="text-2xl font-semibold text-white">
           Welcome back, {session.user?.name || session.user?.email}
         </h1>
-        <p className="mt-2 text-zinc-400">
-          Here's an overview of the Partner Portal
+        <p className="mt-1 text-sm text-zinc-400">
+          Partner Portal overview
         </p>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         <Link href="/battle-cards">
-          <Card className="group cursor-pointer border-zinc-800/60 bg-zinc-900/50 transition-all hover:border-kzOrange hover:bg-zinc-800/30">
+          <Card className="cursor-pointer border border-zinc-800 bg-zinc-900/30 hover:border-zinc-700 hover:bg-zinc-900/50 transition-colors">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium text-zinc-400">
                 Battle Cards
               </CardTitle>
-              <FileText className="h-5 w-5 text-kzOrange transition-transform group-hover:scale-110" />
+              <FileText className="h-5 w-5 text-kzOrange" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-zinc-100">{battleCardCount}</div>
+              <div className="text-2xl font-bold text-white">{battleCardCount}</div>
               <p className="text-xs text-zinc-500 mt-1">
                 Competitive intelligence & positioning guides
               </p>
@@ -63,15 +63,15 @@ export default async function RootPage() {
         </Link>
 
         <Link href="/announcements">
-          <Card className="group cursor-pointer border-zinc-800/60 bg-zinc-900/50 transition-all hover:border-kzOrange hover:bg-zinc-800/30">
+          <Card className="cursor-pointer border border-zinc-800 bg-zinc-900/30 hover:border-zinc-700 hover:bg-zinc-900/50 transition-colors">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium text-zinc-400">
                 Announcements
               </CardTitle>
-              <Megaphone className="h-5 w-5 text-kzOrange transition-transform group-hover:scale-110" />
+              <Megaphone className="h-5 w-5 text-kzOrange" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-zinc-100">{announcementCount}</div>
+              <div className="text-2xl font-bold text-white">{announcementCount}</div>
               <p className="text-xs text-zinc-500 mt-1">
                 Latest partner updates and news
               </p>
@@ -80,15 +80,15 @@ export default async function RootPage() {
         </Link>
 
         <Link href="/resources">
-          <Card className="group cursor-pointer border-zinc-800/60 bg-zinc-900/50 transition-all hover:border-kzOrange hover:bg-zinc-800/30">
+          <Card className="cursor-pointer border border-zinc-800 bg-zinc-900/30 hover:border-zinc-700 hover:bg-zinc-900/50 transition-colors">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium text-zinc-400">
                 Resources
               </CardTitle>
-              <BookOpen className="h-5 w-5 text-kzOrange transition-transform group-hover:scale-110" />
+              <BookOpen className="h-5 w-5 text-kzOrange" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-zinc-100">{resourceCount}</div>
+              <div className="text-2xl font-bold text-white">{resourceCount}</div>
               <p className="text-xs text-zinc-500 mt-1">
                 Sales materials and enablement content
               </p>
@@ -97,12 +97,12 @@ export default async function RootPage() {
         </Link>
 
         <Link href="/industries">
-          <Card className="group cursor-pointer border-zinc-800/60 bg-zinc-900/50 transition-all hover:border-kzOrange hover:bg-zinc-800/30">
+          <Card className="cursor-pointer border border-zinc-800 bg-zinc-900/30 hover:border-zinc-700 hover:bg-zinc-900/50 transition-colors">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium text-zinc-400">
                 Industries
               </CardTitle>
-              <BarChart className="h-5 w-5 text-kzOrange transition-transform group-hover:scale-110" />
+              <BarChart className="h-5 w-5 text-kzOrange" />
             </CardHeader>
             <CardContent>
               <div className="text-sm text-zinc-300 mt-1">
@@ -116,12 +116,12 @@ export default async function RootPage() {
         </Link>
 
         <Link href="/security-assessment">
-          <Card className="group cursor-pointer border-zinc-800/60 bg-zinc-900/50 transition-all hover:border-kzOrange hover:bg-zinc-800/30">
+          <Card className="cursor-pointer border border-zinc-800 bg-zinc-900/30 hover:border-zinc-700 hover:bg-zinc-900/50 transition-colors">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium text-zinc-400">
                 Security Assessment
               </CardTitle>
-              <Shield className="h-5 w-5 text-kzOrange transition-transform group-hover:scale-110" />
+              <Shield className="h-5 w-5 text-kzOrange" />
             </CardHeader>
             <CardContent>
               <div className="text-sm text-zinc-300 mt-1">
@@ -136,15 +136,15 @@ export default async function RootPage() {
 
         {isAdmin && (
           <Link href="/admin/users">
-            <Card className="group cursor-pointer border-zinc-800/60 bg-zinc-900/50 transition-all hover:border-kzOrange hover:bg-zinc-800/30">
+            <Card className="cursor-pointer border border-zinc-800 bg-zinc-900/30 hover:border-zinc-700 hover:bg-zinc-900/50 transition-colors">
               <CardHeader className="flex flex-row items-center justify-between pb-2">
                 <CardTitle className="text-sm font-medium text-zinc-400">
                   Admin: Users
                 </CardTitle>
-                <Users className="h-5 w-5 text-kzOrange transition-transform group-hover:scale-110" />
+                <Users className="h-5 w-5 text-kzOrange" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-zinc-100">{userCount}</div>
+                <div className="text-2xl font-bold text-white">{userCount}</div>
                 <p className="text-xs text-zinc-500 mt-1">
                   Manage portal users and partners
                 </p>
@@ -155,12 +155,12 @@ export default async function RootPage() {
 
         {isAdmin && (
           <Link href="/admin/content">
-            <Card className="group cursor-pointer border-zinc-800/60 bg-zinc-900/50 transition-all hover:border-kzOrange hover:bg-zinc-800/30">
+            <Card className="cursor-pointer border border-zinc-800 bg-zinc-900/30 hover:border-zinc-700 hover:bg-zinc-900/50 transition-colors">
               <CardHeader className="flex flex-row items-center justify-between pb-2">
                 <CardTitle className="text-sm font-medium text-zinc-400">
                   Admin: Content
                 </CardTitle>
-                <FileText className="h-5 w-5 text-kzOrange transition-transform group-hover:scale-110" />
+                <FileText className="h-5 w-5 text-kzOrange" />
               </CardHeader>
               <CardContent>
                 <div className="text-sm text-zinc-300 mt-1">
