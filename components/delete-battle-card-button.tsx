@@ -33,7 +33,7 @@ export function DeleteBattleCardButton({ id }: DeleteBattleCardButtonProps) {
 
       if (res.ok) {
         setOpen(false);
-        router.push("/app/battle-cards");
+        router.push("/battle-cards");
         router.refresh();
       } else {
         console.error("Failed to delete battle card");

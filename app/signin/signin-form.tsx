@@ -11,7 +11,7 @@ import { Label } from "@/components/ui/label";
 function SignInFormInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") || "/app";
+  const callbackUrl = searchParams.get("callbackUrl") || "/";
 
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);

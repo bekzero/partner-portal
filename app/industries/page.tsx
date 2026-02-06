@@ -54,7 +54,7 @@ export default async function IndustriesPage({ searchParams }: IndustriesPagePro
         {industriesWithCounts.map(({ industry, _count }) => (
           <Link
             key={industry}
-            href={`/app/industries?industry=${encodeURIComponent(industry)}`}
+             href={`/industries?industry=${encodeURIComponent(industry)}`}
           >
             <Card
               className={`border-zinc-800/60 bg-zinc-900/50 transition-all hover:border-zinc-700 hover:bg-zinc-800/30 ${
@@ -112,7 +112,7 @@ export default async function IndustriesPage({ searchParams }: IndustriesPagePro
           ) : (
             <div className="grid gap-4 md:grid-cols-2">
               {battleCards.map((card) => (
-                <Link key={card.id} href={`/app/battle-cards/${card.id}`}>
+                <Link key={card.id} href={`/battle-cards/${card.id}`}>
                   <Card className="border-zinc-800/60 bg-zinc-900/50 transition-all hover:border-zinc-700 hover:bg-zinc-800/30">
                     <CardHeader className="pb-2">
                       <CardTitle className="text-lg text-zinc-200 hover:text-kzOrange">

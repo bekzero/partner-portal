@@ -13,7 +13,7 @@ export default async function AdminUsersPage() {
   const session = await getSession();
   
   if (session?.user?.role !== "admin") {
-    redirect("/app");
+    redirect("/");
   }
 
   const users = await prisma.user.findMany({

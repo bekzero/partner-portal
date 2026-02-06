@@ -70,13 +70,13 @@ export function GlobalSearch() {
     
     switch (result.type) {
       case "battleCard":
-        router.push(`/app/battle-cards/${result.id}`);
+        router.push(`/battle-cards/${result.id}`);
         break;
       case "announcement":
-        router.push(`/app/announcements/${result.id}`);
+        router.push(`/announcements/${result.id}`);
         break;
       case "industry":
-        router.push(`/app/industries?industry=${encodeURIComponent(result.title)}`);
+        router.push(`/industries?industry=${encodeURIComponent(result.title)}`);
         break;
     }
   };

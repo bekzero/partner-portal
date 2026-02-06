@@ -8,7 +8,7 @@ export default async function NewBattleCardPage() {
   const session = await getSession();
   
   if (session?.user?.role !== "admin") {
-    redirect("/app/battle-cards");
+    redirect("/battle-cards");
   }
 
   const tags = await prisma.tag.findMany({

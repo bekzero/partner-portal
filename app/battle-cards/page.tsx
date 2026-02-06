@@ -146,7 +146,7 @@ export default async function BattleCardsPage({ searchParams }: BattleCardsPageP
       ) : (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {battleCards.map((card) => (
-            <Link key={card.id} href={`/app/battle-cards/${card.id}`}>
+            <Link key={card.id} href={`/battle-cards/${card.id}`}>
               <Card className="group h-full border-zinc-800/60 bg-zinc-900/50 transition-all hover:border-zinc-700 hover:bg-zinc-800/30">
                 <CardHeader className="pb-3">
                   <div className="flex items-start justify-between">

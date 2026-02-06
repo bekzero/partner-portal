@@ -91,7 +91,7 @@ export default async function BattleCardPage({ params }: BattleCardPageProps) {
               asChild
               className="border-zinc-700 bg-zinc-950 text-zinc-300 hover:bg-zinc-800 hover:text-zinc-100"
             >
-              <Link href={`/app/battle-cards/${battleCard.id}/edit`}>
+              <Link href={`/battle-cards/${battleCard.id}/edit`}>
                 <Edit className="mr-2 h-4 w-4" />
                 Edit
               </Link>

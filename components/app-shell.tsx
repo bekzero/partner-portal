@@ -49,17 +49,17 @@ interface AppShellProps {
 }
 
 const mainNavItems = [
-  { name: "Dashboard", href: "/app", icon: LayoutDashboard },
-  { name: "Battle Cards", href: "/app/battle-cards", icon: FileText },
-  { name: "Industries", href: "/app/industries", icon: Building2 },
-  { name: "Resources", href: "/app/resources", icon: FolderOpen },
-  { name: "Announcements", href: "/app/announcements", icon: Megaphone },
-  { name: "Security Assessment", href: "/app/security-assessment", icon: ShieldCheck },
+  { name: "Dashboard", href: "/", icon: LayoutDashboard },
+  { name: "Battle Cards", href: "/battle-cards", icon: FileText },
+  { name: "Industries", href: "/industries", icon: Building2 },
+  { name: "Resources", href: "/resources", icon: FolderOpen },
+  { name: "Announcements", href: "/announcements", icon: Megaphone },
+  { name: "Security Assessment", href: "/security-assessment", icon: ShieldCheck },
 ];
 
 const adminNavItems = [
-  { name: "Manage Users", href: "/app/admin/users", icon: Users },
-  { name: "Manage Content", href: "/app/admin/content", icon: Shield },
+  { name: "Manage Users", href: "/admin/users", icon: Users },
+  { name: "Manage Content", href: "/admin/content", icon: Shield },
 ];
 
 export function AppShell({ children, user }: AppShellProps) {
@@ -139,10 +139,10 @@ export function AppShell({ children, user }: AppShellProps) {
 
       <div className="p-3">
         <Link
-          href="/app/settings"
+          href="/settings"
           onClick={onItemClick}
           className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-kzOrange focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950 ${
-            pathname === "/app/settings"
+            pathname === "/settings"
               ? "bg-kzOrange text-black font-semibold"
               : "text-white hover:bg-zinc-700 hover:text-kzOrange"
           }`}
@@ -214,10 +214,10 @@ export function AppShell({ children, user }: AppShellProps) {
               </DropdownMenuLabel>
               <DropdownMenuSeparator className="bg-zinc-800/60" />
               <DropdownMenuItem asChild className="text-zinc-300 focus:bg-zinc-800/50 focus:text-zinc-100">
-                <Link href="/app/settings">
-                  <Settings className="mr-2 h-4 w-4" />
-                  Account Settings
-                </Link>
+              <Link href="/settings">
+                <Settings className="mr-2 h-4 w-4" />
+                Account Settings
+              </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator className="bg-zinc-800/60" />
               <DropdownMenuItem

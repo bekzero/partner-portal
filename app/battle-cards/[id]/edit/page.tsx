@@ -12,7 +12,7 @@ export default async function EditBattleCardPage({ params }: EditBattleCardPageP
   const session = await getSession();
   
   if (session?.user?.role !== "admin") {
-    redirect("/app/battle-cards");
+    redirect("/battle-cards");
   }
 
   const { id } = await params;

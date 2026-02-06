@@ -15,7 +15,7 @@ export default async function AdminContentPage() {
   const session = await getSession();
   
   if (session?.user?.role !== "admin") {
-    redirect("/app");
+    redirect("/");
   }
 
   const battleCards = await prisma.battleCard.findMany({
@@ -109,7 +109,7 @@ export default async function AdminContentPage() {
                         asChild
                         className="border-zinc-700 bg-zinc-950 text-zinc-300 hover:bg-zinc-800 hover:text-zinc-100"
                       >
-                        <Link href={`/app/battle-cards/${card.id}/edit`}>
+                        <Link href={`/battle-cards/${card.id}/edit`}>
                           <Edit className="h-4 w-4" />
                         </Link>
                       </Button>

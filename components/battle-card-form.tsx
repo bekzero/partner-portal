@@ -59,7 +59,7 @@ export function BattleCardForm({ initialData, allTags }: BattleCardFormProps) {
 
       if (res.ok) {
         const data = await res.json();
-        router.push(`/app/battle-cards/${data.id || initialData?.id}`);
+        router.push(`/battle-cards/${data.id || initialData?.id}`);
         router.refresh();
       } else {
         console.error("Failed to save battle card");
@@ -262,7 +262,7 @@ export function BattleCardForm({ initialData, allTags }: BattleCardFormProps) {
         <Button
           type="button"
           variant="outline"
-          onClick={() => router.push("/app/battle-cards")}
+          onClick={() => router.push("/battle-cards")}
           className="border-zinc-700 bg-zinc-950 text-zinc-300 hover:bg-zinc-800 hover:text-zinc-100"
         >
           Cancel
