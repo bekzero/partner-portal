@@ -3,7 +3,13 @@ import { getSession } from "@/lib/auth";
 import DashboardClient from "@/components/dashboard-client";
 
 export default async function DashboardPage() {
-  const session = await getSession();
+  let session;
+  
+  try {
+    session = await getSession();
+  } catch (error) {
+    console.error("Session error:", error);
+  }
   
   if (!session?.user) {
     redirect("/signin");

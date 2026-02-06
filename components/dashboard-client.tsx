@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { FileText, Megaphone, TrendingUp, ShieldCheck, ArrowRight } from "lucide-react";
 
@@ -40,18 +40,23 @@ interface DashboardData {
 export default function DashboardClient({ initialData }: { initialData: DashboardData }) {
   const [data, setData] = useState<DashboardData>(initialData);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchData() {
       try {
         setLoading(true);
+        setError(null);
         const res = await fetch("/api/dashboard");
         if (res.ok) {
           const newData = await res.json();
           setData(newData);
+        } else {
+          setError("Failed to load dashboard data");
         }
-      } catch (error) {
-        console.error("Failed to fetch dashboard data:", error);
+      } catch (err) {
+        setError("Connection error. Please try again.");
+        console.error("Dashboard fetch error:", err);
       } finally {
         setLoading(false);
       }
@@ -65,12 +70,18 @@ export default function DashboardClient({ initialData }: { initialData: Dashboar
   return (
     <AppShell user={user}>
       <div className="space-y-6">
+        {error && (
+          <div className="bg-red-900/50 border border-red-800 text-red-200 px-4 py-3 rounded-lg">
+            {error}
+          </div>
+        )}
+
         <div>
           <h1 className="text-2xl font-semibold tracking-tight text-zinc-100">
             Dashboard
           </h1>
           <p className="text-sm text-zinc-400">
-            Welcome back, {data.user?.name || data.user?.email}
+            Welcome back, {user.name || user.email || "User"}
           </p>
         </div>
 
