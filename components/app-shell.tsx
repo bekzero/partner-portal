@@ -6,6 +6,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 import {
+  Home,
   LayoutDashboard,
   FileText,
   Building2,
@@ -49,6 +50,7 @@ interface AppShellProps {
 }
 
 const mainNavItems = [
+  { name: "Home", href: "/", icon: Home },
   { name: "Dashboard", href: "/", icon: LayoutDashboard },
   { name: "Battle Cards", href: "/battle-cards", icon: FileText },
   { name: "Industries", href: "/industries", icon: Building2 },
@@ -96,17 +98,19 @@ export function AppShell({ children, user }: AppShellProps) {
   const SidebarContent = ({ onItemClick }: { onItemClick?: () => void }) => (
     <div className="flex h-full flex-col">
       <div className="flex h-16 items-center gap-3 px-4">
-        <Image
-          src="/dark-favicon.png"
-          alt="KZero"
-          width={32}
-          height={32}
-          className="h-8 w-auto"
-        />
-        <div className="flex flex-col">
-          <span className="font-semibold text-sm tracking-wide text-white">KZero Passwordless Partner Portal</span>
-          <span className="text-xs text-zinc-400">Enablement Hub</span>
-        </div>
+        <Link href="/">
+          <Image
+            src="/dark-favicon.png"
+            alt="KZero"
+            width={32}
+            height={32}
+            className="h-8 w-auto"
+          />
+        </Link>
+        <Link href="/" className="flex flex-col hover:opacity-80 transition-opacity">
+          <span className="font-semibold text-sm tracking-wide text-white">KZero Passwordless</span>
+          <span className="text-xs text-zinc-400">Partner Portal</span>
+        </Link>
       </div>
 
       <Separator className="bg-zinc-800/60" />
