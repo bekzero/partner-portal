@@ -13,12 +13,25 @@ export default async function RootPage() {
 
   const isAdmin = session.user?.role === "admin";
 
-  const [battleCardCount, announcementCount, resourceCount, userCount] = await Promise.all([
-    prisma.battleCard.count({ where: { published: true } }),
-    prisma.announcement.count({ where: { published: true } }),
-    prisma.resource.count({ where: { published: true } }),
-    prisma.user.count(),
-  ]);
+  let battleCardCount = 0;
+  let announcementCount = 0;
+  let resourceCount = 0;
+  let userCount = 0;
+
+  try {
+    const [bc, ac, rc, uc] = await Promise.all([
+      prisma.battleCard.count({ where: { published: true } }).catch(() => 0),
+      prisma.announcement.count({ where: { published: true } }).catch(() => 0),
+      prisma.resource.count({ where: { published: true } }).catch(() => 0),
+      prisma.user.count().catch(() => 0),
+    ]);
+    battleCardCount = bc;
+    announcementCount = ac;
+    resourceCount = rc;
+    userCount = uc;
+  } catch {
+    // Database not ready yet
+  }
 
   return (
     <div className="space-y-8">
