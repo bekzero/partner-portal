@@ -1,5 +1,5 @@
 {
-  "buildCommand": "npx prisma generate --no-engine && npx prisma db seed && next build",
+  "buildCommand": "npx prisma generate --no-engine && npx prisma migrate deploy && npx prisma db seed && next build",
   "devCommand": "next dev",
   "installCommand": "npm install",
   "framework": "nextjs",
