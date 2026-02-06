@@ -1,12 +1,19 @@
 import { redirect } from "next/navigation";
-
-import { getSession } from "@/lib/auth";
+import { getServerSession } from "next-auth";
 import SignInForm from "@/app/signin/signin-form";
 import { ShieldCheck, Lock, ArrowRight } from "lucide-react";
 import Image from "next/image";
+import { authOptions } from "@/lib/auth";
 
 export default async function SignInPage() {
-  const session = await getSession();
+  let session = null;
+  
+  try {
+    session = await getServerSession(authOptions);
+  } catch (e) {
+    console.warn("Could not get session, continuing with signin");
+  }
+  
   if (session) redirect("/");
 
   return (
@@ -14,7 +21,7 @@ export default async function SignInPage() {
       <div className="mx-auto flex min-h-dvh w-full max-w-6xl items-center justify-center px-6 py-12">
         <div className="grid w-full max-w-5xl grid-cols-1 overflow-hidden rounded-2xl border border-zinc-800/60 bg-zinc-950/80 shadow-2xl backdrop-blur-xl md:grid-cols-2">
           <div className="relative hidden border-r border-zinc-800/60 bg-gradient-to-br from-zinc-900/90 to-zinc-950/90 p-10 md:block">
-            <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNCI+PGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iMiIvPjwvZz48L2c+PC9zdmc+')] opacity-50" />
+            <div className="absolute inset-0 bg-[data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNCI+PGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iMiIvPjwvZz48L2c+PC9zdmc+] opacity-50" />
 
             <div className="relative z-10">
               <div className="mb-8">
@@ -30,7 +37,7 @@ export default async function SignInPage() {
 
               <div className="mt-4">
                 <h2 className="text-2xl font-semibold leading-tight text-white">
-                  Passwordless authentication for MSPs and MSSPs
+                  Passwordless authentication for MSPs and MSSSs
                 </h2>
                 <p className="mt-4 text-sm text-zinc-300">
                   Access your partner enablement resources, battle cards, and the latest updates.

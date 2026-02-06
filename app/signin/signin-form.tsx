@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { Suspense, useState, useTransition } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-export default function SignInForm() {
+function SignInFormInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/app";
@@ -89,5 +89,13 @@ export default function SignInForm() {
         {isPending ? "Signing in…" : "Sign in"}
       </Button>
     </form>
+  );
+}
+
+export default function SignInForm() {
+  return (
+    <Suspense fallback={<div className="space-y-5"><div className="h-11 bg-zinc-800 rounded animate-pulse" /><div className="h-11 bg-zinc-800 rounded animate-pulse" /></div>}>
+      <SignInFormInner />
+    </Suspense>
   );
 }
