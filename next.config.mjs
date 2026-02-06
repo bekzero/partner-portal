@@ -8,7 +8,9 @@ const nextConfig = {
       },
     ],
   },
-  transpilePackages: ['@prisma/client'],
+  experimental: {
+    serverComponentsExternalPackages: ['@prisma/client'],
+  },
   webpack: (config, { isServer }) => {
     if (!isServer) {
       config.resolve.fallback = {
