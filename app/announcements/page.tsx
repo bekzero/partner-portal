@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Megaphone, Calendar, ArrowRight } from "lucide-react";
 
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";

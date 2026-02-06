@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Building2, FileText, ArrowRight } from "lucide-react";
 
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 

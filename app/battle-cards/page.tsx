@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Plus, Search, Filter, FileText } from "lucide-react";
 
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

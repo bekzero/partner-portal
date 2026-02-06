@@ -3,15 +3,12 @@ import { getServerSession } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
+import prisma from "@/lib/prisma";
 
 const credentialsSchema = z.object({
   email: z.string().email(),
   password: z.string().min(1),
 });
-
-const ADMIN_EMAIL = "admin@kzero.com";
-const ADMIN_PASSWORD = "admin123";
-const ADMIN_PASSWORD_HASH = "$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/X4.xN6.1P3E6u2Wfm";
 
 export const authOptions: NextAuthOptions = {
   session: {
@@ -31,19 +28,25 @@ export const authOptions: NextAuthOptions = {
         const parsed = credentialsSchema.safeParse(credentials);
         if (!parsed.success) return null;
 
-        if (parsed.data.email === ADMIN_EMAIL) {
-          const ok = await bcrypt.compare(parsed.data.password, ADMIN_PASSWORD_HASH);
-          if (ok) {
-            return {
-              id: "admin-1",
-              email: ADMIN_EMAIL,
-              name: "Portal Admin",
-              role: "admin",
-            };
-          }
-        }
+        try {
+          const user = await prisma.user.findUnique({
+            where: { email: parsed.data.email },
+          });
+          if (!user) return null;
 
-        return null;
+          const ok = await bcrypt.compare(parsed.data.password, user.passwordHash);
+          if (!ok) return null;
+
+          return {
+            id: user.id,
+            email: user.email,
+            name: user.name ?? undefined,
+            role: user.role,
+          } as any;
+        } catch (error) {
+          console.error("Auth error:", error);
+          return null;
+        }
       },
     }),
   ],

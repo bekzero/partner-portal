@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
 import { BattleCardForm } from "@/components/battle-card-form";
 
